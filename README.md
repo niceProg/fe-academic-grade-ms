@@ -96,29 +96,22 @@ npm run dev
 ```bash
 /app
   └── context/
-
   └── dashboard/
       └── kelas/
           └── [kelasId]/
                └── input-nilai/
                └── konfigurasi/
-
 /components
   └── dashboard/
       └── grade-config/
       └── grade-report/
       └── grade-input/
       └── shared/
-
 /hooks
-
 /lib
   └── sample-data/
-
 /styles
-
 /types
-
 /utils
 ```
 
@@ -153,5 +146,5 @@ git push origin feature/fitur-baru
 
 ## 📧 Kontak
 
-**Wisnu Yumna Yudhanta**
+**Wisnu Yumna Yudhanta** <br/>
 **Email: wisnu.yudhanta@gmail.com**
