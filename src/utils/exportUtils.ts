@@ -8,7 +8,7 @@ import * as XLSX from "xlsx";
 export const generateExportData = (students: Student[], subject: Subject, grades: Record<string, Record<string, Record<string, number>>>): { header: string[]; rows: string[][] } => {
      const header: string[] = ["NIM", "Nama"];
 
-     subject.bab.forEach((bab, index) => {
+     subject.bab.forEach((_, index) => {
           const babIndex = index + 1;
           GRADE_COMPONENTS.forEach((komp) => {
                header.push(`${komp} ${babIndex}`);
@@ -67,7 +67,7 @@ export const exportExcel = (students: Student[], subject: Subject, grades: Recor
 };
 
 export const exportPDF = (students: Student[], subject: Subject, grades: Record<string, Record<string, Record<string, number>>>) => {
-     const { header, rows } = generateExportData(students, subject, grades);
+     const { rows } = generateExportData(students, subject, grades);
      const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "A4" });
 
      doc.setFontSize(14);
@@ -103,7 +103,7 @@ export const exportPDF = (students: Student[], subject: Subject, grades: Record<
                0: { cellWidth: 50, halign: "left" as const },
                1: { cellWidth: 60, halign: "left" as const },
           },
-          didDrawPage: (data) => {
+          didDrawPage: () => {
                const pageSize = doc.internal.pageSize;
                const pageWidth = pageSize.width;
                const pageHeight = pageSize.height;
