@@ -18,7 +18,7 @@ export default function GradeConfigPage() {
      const { handleSubmit, watch } = methods;
 
      const onSubmit = async (data: GradeConfigForm) => {
-          const allValid = data.babWeights.every((bab) => Object.values(bab.weights).reduce((a, b) => a + b, 0) === 100);
+          const allValid = data.babWeights.every((bab) => Object.values(bab.weights).reduce((a: number, b: number) => a + b, 0) === 100);
 
           if (!allValid) {
                alert("Setiap bab harus memiliki total bobot 100%");
@@ -26,18 +26,27 @@ export default function GradeConfigPage() {
           }
 
           console.log("✔️ Submit konfigurasi:", data);
-          setShowSuccess(true); // 👉 tampilkan success modal
+          setShowSuccess(true);
      };
 
+     // Watch data digunakan untuk pratinjau
      const watchedData = watch();
-     const totalBabWeight =
-          watchedData.babWeights?.map((bab: any) => Object.values(bab.weights).reduce((sum: number, val: any) => sum + (typeof val === "number" ? val : 0), 0)).reduce((sum: number, babTotal: number) => sum + babTotal, 0) ?? 0;
+
+     // OPTIONAL: hapus jika tidak digunakan
+     // Jika ingin tetap menghitung total, gunakan ini dengan tipe eksplisit
+     // const totalBabWeight = watchedData.babWeights
+     //   ?.map((bab) =>
+     //     Object.values(bab.weights).reduce(
+     //       (sum: number, val: number) => sum + (typeof val === "number" ? val : 0),
+     //       0
+     //     )
+     //   )
+     //   .reduce((sum: number, babTotal: number) => sum + babTotal, 0) ?? 0;
 
      return (
           <FormProvider {...methods}>
                <div className="min-h-screen space-y-10 overflow-auto">
                     <Header />
-                    {/* Divider */}
                     <hr className="border-gray-300" />
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                          <h1 className="text-2xl font-semibold">Konfigurasi Komponen Nilai</h1>
@@ -51,6 +60,7 @@ export default function GradeConfigPage() {
 
                          <SaveBar onSave={handleSubmit(onSubmit)} />
                     </form>
+
                     <SuccessModal open={showSuccess} onClose={() => setShowSuccess(false)} message="Konfigurasi berhasil disimpan!" />
                </div>
           </FormProvider>

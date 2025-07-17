@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Student, Subject } from "@/types/grade";
+import { GradeComponent, Student, Subject } from "@/types/grade";
 import { exportCSV, exportExcel, exportPDF } from "@/utils/exportUtils";
 
 interface Props {
      students: Student[];
      subject: Subject;
-     grades: any;
+     grades: Record<string, Record<string, Record<GradeComponent, number>>>;
 }
 
 export const ExportReportButton = ({ students, subject, grades }: Props) => {

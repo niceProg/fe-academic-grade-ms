@@ -5,7 +5,7 @@ import { GradeComponent, GradeConfigForm } from "@/types/grade";
 import { GRADE_COMPONENTS } from "@/lib/sample-data/gradeComponents";
 
 export const GradeMatrixEditor = () => {
-     const { register, setValue, control } = useFormContext<GradeConfigForm>();
+     const { setValue, control } = useFormContext<GradeConfigForm>();
      const babWeights = useWatch({ control, name: "babWeights" });
 
      const updateWeight = (babIndex: number, comp: GradeComponent, newValue: number) => {

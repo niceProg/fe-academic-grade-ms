@@ -32,10 +32,10 @@ export type ComponentWeights = Record<GradeComponent, number>;
 
 export interface BabWeight {
      babName: string;
-     weights: ComponentWeights; // setiap bab punya 5 kolom
+     weights: ComponentWeights;
 }
 
 export interface GradeConfigForm {
-     componentWeights: ComponentWeights; // total 100%
+     componentWeights: ComponentWeights;
      babWeights: BabWeight[]; // length = 5
 }

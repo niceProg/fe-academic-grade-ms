@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormContext, useWatch } from "react-hook-form";
+import { FieldErrors, useFormContext, useWatch } from "react-hook-form";
 import { useMemo, useEffect, useState } from "react";
 import { Student, Subject, GradeComponent } from "@/types/grade";
 import { GRADE_COMPONENTS } from "@/lib/sample-data/gradeComponents";
@@ -74,13 +74,15 @@ export const GradeInputRow = ({ student, subject }: Props) => {
           return numericScore < 70 ? "text-red-600" : "text-blue-600";
      }, [finalScore, hydrated]);
 
+     const gradesErrors = errors.grades as FieldErrors<Record<string, Record<string, Record<GradeComponent, number>>>>;
+
      return (
           <tr className={`border-t ${hasError ? "bg-red-50" : ""}`}>
                <td className="px-4 py-2 font-medium whitespace-nowrap">{student.name}</td>
 
                {subject.bab.flatMap((bab) =>
                     GRADE_COMPONENTS.map((komp) => {
-                         const fieldError = (errors.grades as any)?.[student.id]?.[bab]?.[komp];
+                         const fieldError = gradesErrors?.[student.id]?.[bab]?.[komp];
 
                          return (
                               <td key={`${student.id}-${bab}-${komp}`} className="relative">
@@ -106,11 +108,7 @@ export const GradeInputRow = ({ student, subject }: Props) => {
                     })
                )}
 
-               <td
-                    className={`px-4 py-2 font-semibold text-center whitespace-nowrap transition-colors duration-300 ${finalScoreColor}`}
-               >
-                    {hydrated ? finalScore : "-"}
-               </td>
+               <td className={`px-4 py-2 font-semibold text-center whitespace-nowrap transition-colors duration-300 ${finalScoreColor}`}>{hydrated ? finalScore : "-"}</td>
           </tr>
      );
 };

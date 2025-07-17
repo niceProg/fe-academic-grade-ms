@@ -18,30 +18,15 @@ import { ErrorModal } from "@/components/shared/ErrorModal";
 import { SuccessModal } from "@/components/shared/SuccessModal";
 
 export default function GradeInputPage() {
-     const [errorMessage, setErrorMessage] = useState("");
-     const [showError, setShowError] = useState(false);
-
-     const [showSuccess, setShowSuccess] = useState(false);
-
-     const handleError = (msg: string) => {
-          setErrorMessage(msg);
-          setShowError(true);
-     };
-
      const { kelasId } = useParams();
      const kelas = useClassDataById(kelasId as string);
 
      const [hasMounted, setHasMounted] = useState(false);
+     const [errorMessage, setErrorMessage] = useState("");
+     const [showError, setShowError] = useState(false);
+     const [showSuccess, setShowSuccess] = useState(false);
 
-     useEffect(() => {
-          setHasMounted(true);
-     }, []);
-
-     if (!kelas) return <p className="p-6">Memuat data kelas...</p>;
-
-     // Ambil draft jika ada
      const savedDraft = typeof window !== "undefined" ? localStorage.getItem(`draft-grades-${kelasId}`) : null;
-
      const defaultGrades = savedDraft ? JSON.parse(savedDraft) : {};
 
      const methods = useForm({
@@ -50,7 +35,10 @@ export default function GradeInputPage() {
           },
      });
 
-     // Auto-save to localStorage
+     useEffect(() => {
+          setHasMounted(true);
+     }, []);
+
      useEffect(() => {
           if (!hasMounted) return;
 
@@ -61,33 +49,41 @@ export default function GradeInputPage() {
                }, 800)
           );
 
-          // Cleanup
           return () => subscription.unsubscribe();
-     }, [methods.watch, kelasId, hasMounted]);
+     }, [methods, kelasId, hasMounted]);
 
-     const grades = hasMounted ? methods.watch("grades") : {};
-     const { done, total } = hasMounted ? calculateCompletionProgress(kelas.students, kelas.subject, grades) : { done: 0, total: 0 };
+     const grades = methods.watch("grades");
+     const progress = kelas ? calculateCompletionProgress(kelas.students, kelas.subject, grades) : { done: 0, total: 0 };
+
+     const handleError = (msg: string) => {
+          setErrorMessage(msg);
+          setShowError(true);
+     };
+
+     if (!kelas) {
+          return <p className="p-6">Memuat data kelas...</p>;
+     }
 
      return (
           <FormProvider {...methods}>
                <div className="min-h-screen space-y-10 overflow-auto">
                     <Header />
-
-                    {/* Divider */}
                     <hr className="border-gray-300" />
 
                     <div className="space-y-6 pb-24">
                          <h1 className="text-2xl font-semibold">{kelas.name} - Input Nilai</h1>
                          <p className="text-sm text-gray-500">Mata Kuliah: {kelas.subject.name}</p>
 
-                         {hasMounted && <ProgressBar done={done} total={total} />}
+                         <ProgressBar done={progress.done} total={progress.total} />
 
                          <GradeFileImport students={kelas.students} subject={kelas.subject} onError={handleError} />
                          <BulkPasteInput students={kelas.students} subject={kelas.subject} />
                          <StudentGradeTable students={kelas.students} subject={kelas.subject} />
                          <ExportReportButton students={kelas.students} subject={kelas.subject} grades={grades} />
 
-                         {hasMounted && kelas.students.map((student) => <GradeBreakdownPanel key={student.id} student={student} subject={kelas.subject} allGrades={grades} />)}
+                         {kelas.students.map((student) => (
+                              <GradeBreakdownPanel key={student.id} student={student} subject={kelas.subject} allGrades={grades} />
+                         ))}
 
                          <SaveBar
                               onSave={methods.handleSubmit((data) => {
@@ -97,6 +93,8 @@ export default function GradeInputPage() {
                          />
                     </div>
                </div>
+
+               {/* Modals */}
                <ErrorModal open={showError} onClose={() => setShowError(false)} message={errorMessage} />
                <SuccessModal open={showSuccess} onClose={() => setShowSuccess(false)} message="Nilai berhasil disimpan!" />
           </FormProvider>

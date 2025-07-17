@@ -5,14 +5,11 @@ import { SearchFilter } from "@/components/dashboard/SearchFilter";
 import { useClassFilter } from "@/hooks/useClassFilter";
 import { useClassData } from "@/hooks/useClassData";
 import { ClassSummaryChart } from "@/components/dashboard/SummaryChart";
-import { Menu } from "lucide-react"; // icon
-import { useSidebar } from "../context/SidebarContext";
 import { Header } from "@/components/dashboard/Header";
 
 export default function ClassDashboardPage() {
      const { classes } = useClassData();
      const { filteredClasses, search, setSearch, selectedSemester, setSemester } = useClassFilter(classes);
-     const { toggleSidebar } = useSidebar();
 
      return (
           <div className="min-h-screen space-y-10 overflow-auto">

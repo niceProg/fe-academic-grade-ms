@@ -1,12 +1,12 @@
 "use client";
 
-import { Student, Subject } from "@/types/grade";
+import { GradeComponent, Student, Subject } from "@/types/grade";
 import { GRADE_COMPONENTS } from "@/lib/sample-data/gradeComponents";
 
 interface Props {
      student: Student;
      subject: Subject;
-     allGrades: any;
+     allGrades: Record<string, Record<string, Record<GradeComponent, number>>>;
 }
 
 export const GradeBreakdownPanel = ({ student, subject, allGrades }: Props) => {
