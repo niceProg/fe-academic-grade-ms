@@ -5,10 +5,9 @@ import autoTable from "jspdf-autotable";
 import * as XLSX from "xlsx";
 
 // Template Export Data
-export const generateExportData = (students: Student[], subject: Subject, grades: any): { header: string[]; rows: string[][] } => {
+export const generateExportData = (students: Student[], subject: Subject, grades: Record<string, Record<string, Record<string, number>>>): { header: string[]; rows: string[][] } => {
      const header: string[] = ["NIM", "Nama"];
 
-     // Header dinamis: "Tugas 1", "UTS 1", dst.
      subject.bab.forEach((bab, index) => {
           const babIndex = index + 1;
           GRADE_COMPONENTS.forEach((komp) => {
@@ -29,7 +28,7 @@ export const generateExportData = (students: Student[], subject: Subject, grades
                     const value = grades?.[student.id]?.[bab]?.[komp] ?? 0;
                     const weight = subject.weight?.[komp] ?? 0;
                     const weighted = (value * weight) / 100;
-                    row.push(Math.round(weighted).toString()); // Dibulatkan
+                    row.push(Math.round(weighted).toString());
                     totalBab += weighted;
                });
 
@@ -45,8 +44,7 @@ export const generateExportData = (students: Student[], subject: Subject, grades
      return { header, rows };
 };
 
-// Export to CSV
-export const exportCSV = (students: Student[], subject: Subject, grades: any) => {
+export const exportCSV = (students: Student[], subject: Subject, grades: Record<string, Record<string, Record<string, number>>>) => {
      const { header, rows } = generateExportData(students, subject, grades);
      const allRows = [header, ...rows];
      const csvContent = "data:text/csv;charset=utf-8," + allRows.map((r) => r.join(",")).join("\n");
@@ -60,8 +58,7 @@ export const exportCSV = (students: Student[], subject: Subject, grades: any) =>
      link.remove();
 };
 
-// Export to Excel
-export const exportExcel = (students: Student[], subject: Subject, grades: any) => {
+export const exportExcel = (students: Student[], subject: Subject, grades: Record<string, Record<string, Record<string, number>>>) => {
      const { header, rows } = generateExportData(students, subject, grades);
      const worksheet = XLSX.utils.aoa_to_sheet([header, ...rows]);
      const workbook = XLSX.utils.book_new();
@@ -69,8 +66,7 @@ export const exportExcel = (students: Student[], subject: Subject, grades: any) 
      XLSX.writeFile(workbook, "laporan_nilai.xlsx");
 };
 
-// Export to PDF (landscape + ukuran letter)
-export const exportPDF = (students: Student[], subject: Subject, grades: any) => {
+export const exportPDF = (students: Student[], subject: Subject, grades: Record<string, Record<string, Record<string, number>>>) => {
      const { header, rows } = generateExportData(students, subject, grades);
      const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "A4" });
 
@@ -85,7 +81,7 @@ export const exportPDF = (students: Student[], subject: Subject, grades: any) =>
                     ...subject.bab.map((bab) => ({
                          content: bab,
                          colSpan: GRADE_COMPONENTS.length,
-                         styles: { halign: "center" as const }, // ✅ fix here
+                         styles: { halign: "center" as const },
                     })),
                     { content: "Nilai Akhir", rowSpan: 2 },
                ],
@@ -95,7 +91,7 @@ export const exportPDF = (students: Student[], subject: Subject, grades: any) =>
           startY: 60,
           styles: {
                fontSize: 8,
-               halign: "center" as const, // ✅ fix here
+               halign: "center" as const,
                valign: "middle",
           },
           headStyles: {

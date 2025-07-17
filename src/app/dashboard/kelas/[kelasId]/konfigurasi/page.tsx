@@ -15,7 +15,7 @@ export default function GradeConfigPage() {
      const [showSuccess, setShowSuccess] = useState(false);
 
      const methods = useGradeConfigForm(defaultConfig);
-     const { handleSubmit, watch } = methods;
+     const { handleSubmit } = methods;
 
      const onSubmit = async (data: GradeConfigForm) => {
           const allValid = data.babWeights.every((bab) => Object.values(bab.weights).reduce((a: number, b: number) => a + b, 0) === 100);
@@ -28,9 +28,6 @@ export default function GradeConfigPage() {
           console.log("✔️ Submit konfigurasi:", data);
           setShowSuccess(true);
      };
-
-     // Watch data digunakan untuk pratinjau
-     const watchedData = watch();
 
      // OPTIONAL: hapus jika tidak digunakan
      // Jika ingin tetap menghitung total, gunakan ini dengan tipe eksplisit

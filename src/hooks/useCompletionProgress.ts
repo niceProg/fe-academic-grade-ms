@@ -1,11 +1,7 @@
 import { GRADE_COMPONENTS } from "@/lib/sample-data/gradeComponents";
 import { Student, Subject } from "@/types/grade";
 
-export function calculateCompletionProgress(
-     students: Student[],
-     subject: Subject,
-     grades: any // grades[studentId][bab][component]
-) {
+export function calculateCompletionProgress(students: Student[], subject: Subject, grades: Record<string, Record<string, Record<string, number>>>) {
      const totalStudents = students.length;
      let completeStudents = 0;
 

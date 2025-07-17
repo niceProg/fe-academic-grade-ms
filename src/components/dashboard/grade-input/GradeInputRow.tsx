@@ -34,9 +34,11 @@ export const GradeInputRow = ({ student, subject }: Props) => {
      // ⬇️ Watch all grade values for this student in real-time
      const grades = useWatch({ control, name: `grades.${student.id}` });
 
+     const gradesErrors = errors.grades as FieldErrors<Record<string, Record<string, Record<GradeComponent, number>>>>;
+
      const hasError = useMemo(() => {
-          return subject.bab.some((bab) => GRADE_COMPONENTS.some((komp) => !!(errors.grades as any)?.[student.id]?.[bab]?.[komp]));
-     }, [errors.grades, student.id, subject.bab]);
+          return subject.bab.some((bab) => GRADE_COMPONENTS.some((komp) => !!gradesErrors?.[student.id]?.[bab]?.[komp]));
+     }, [gradesErrors, student.id, subject.bab]);
 
      const finalScore = useMemo(() => {
           if (!grades) return "-";
@@ -73,8 +75,6 @@ export const GradeInputRow = ({ student, subject }: Props) => {
           const numericScore = parseFloat(finalScore);
           return numericScore < 70 ? "text-red-600" : "text-blue-600";
      }, [finalScore, hydrated]);
-
-     const gradesErrors = errors.grades as FieldErrors<Record<string, Record<string, Record<GradeComponent, number>>>>;
 
      return (
           <tr className={`border-t ${hasError ? "bg-red-50" : ""}`}>
