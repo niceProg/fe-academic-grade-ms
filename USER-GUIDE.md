@@ -33,7 +33,7 @@ Sebelum menginput nilai, dosen perlu mengatur komponen penilaian:
 3. Input nilai numerik per mahasiswa dan komponen.
 4. Setelah selesai, klik tombol Simpan.
 
-### 🛑 Validasi otomatis akan dilakukan:
+     - 🛑 Validasi otomatis akan dilakukan:
 
 - Nilai tidak boleh kosong.
 - Nilai harus dalam rentang valid (misalnya 0-100).
